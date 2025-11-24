@@ -220,8 +220,15 @@
       <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg livox_frame_slashless)" args=" 0.0 0.0 0.09 0 0.0 0.0 $(arg fcu_frame) $(arg livox_frame)" />
     </group>
 
+    <group if="$(eval arg('UAV_TYPE') == 'a430')">
+      <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg livox_frame_slashless)" args=" 0.097 0.0 0.067 0 0.191 0.0 0.982 $(arg fcu_frame) $(arg livox_frame)" />
+			<node pkg="tf2_ros" type="static_transform_publisher" name="livox_frame_to_livox" args=" 0.0 0.0 0.0 0.0 0.0 0.0  $(arg livox_frame) $(arg UAV_NAME)/livox" />
+    </group>
+
     <!-- The node -->
-    <include file="$(find livox_ros_driver2)/launch/mid360.launch" />
+    <include file="$(find livox_ros_driver2)/launch/mid360.launch" >
+      <arg name="xfer_format" value="1"/>
+    </include>
 
   </group>
 

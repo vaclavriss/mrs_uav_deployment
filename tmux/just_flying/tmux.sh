@@ -35,13 +35,11 @@ pre_input=""
 # * "new line" after the command    => the command will be called after start
 # * NO "new line" after the command => the command will wait for user's <enter>
 input=(
-  'Rosbag' 'waitForOffboard; ./record.sh
+  'Rosbag' 'waitForOffboard; ./record.sh'
+  
+  'Camera' 'waitForTime; roslaunch pylon_camera nodelet.launch
 '
-  'Sensors' 'waitForTime; roslaunch mrs_uav_deployment sensors.launch
-'
-  # 'TF_Static' 'waitForTime; roslaunch ./launch/tf_static.launch
-# '
-  'Nimbro' 'waitForTime; rosrun mrs_uav_deployment run_nimbro.py ./config/network_config.yaml `rospack find mrs_uav_deployment`/config/communication_config.yaml
+  'Livox'  'waitForTime; roslaunch livox_ros_driver2 mid360.launch
 '
   'HwApi' 'waitForTime; roslaunch mrs_uav_px4_api api.launch
 '
@@ -51,7 +49,17 @@ input=(
 '
   'AutoStart' 'waitForHw; roslaunch mrs_uav_autostart automatic_start.launch
 '
-# do NOT modify the command list below
+  'state machine' 'waitForControl; roslaunch insulator_inspection state_machine.launch
+'
+  'start_mission' 'waitForHw; rostopic pub /uav60/state_machine/input std_msgs/String START'
+  'localization' 'waitForHw;  roslaunch insulator_inspection localization.launch
+'
+  'towers marker' 'waitForHw; roslaunch insulator_inspection towers_marker_publisher.launch
+'
+  'docker' 'waitForHw; roscd insulator_inspection/scripts/docker && ./run.sh 
+' 
+  'detection' 'waitForHw; roslaunch insulator_inspection detection.launch
+' 
   'EstimDiag' 'waitForHw; rostopic echo /'"$UAV_NAME"'/estimation_manager/diagnostics
 '
   'kernel_log' 'tail -f /var/log/kern.log -n 100
@@ -144,7 +152,9 @@ done
 # send commands
 for ((i=0; i < ${#cmds[*]}; i++));
 do
-  $TMUX_BIN send-keys -t $SESSION_NAME:$(($i+1)) "cd $SCRIPTPATH;${pre_input};${cmds[$i]}"
+  $TMUX_BIN send-keys -t $SESSION_NAME:$(($i+1)) "cd $SCRIPTPATH;
+${pre_input};
+${cmds[$i]}"
 done
 
 # identify the index of the init window

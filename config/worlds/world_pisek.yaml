@@ -2,12 +2,12 @@ world_origin:
 
   units: "LATLON" # {"UTM, "LATLON"}
 
-  origin_x: 49.36225
-  origin_y: 14.26143
+  origin_x: 49.2872381
+  origin_y: 14.1281482
 
 safety_area:
 
-  enabled: true
+  enabled: false
 
   horizontal:
 
@@ -19,14 +19,10 @@ safety_area:
     # x, y [m] for any frame_name except latlon_origin
     # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
     points: [
-      49.36179, 14.26094,
-      49.36166, 14.26124,
-      49.36173, 14.26190,
-      49.36311, 14.26350,
-      49.36355, 14.26084,
-      49.36232, 14.26025,
-      49.362091, 14.260506,
-      49.361990, 14.260631,
+      50.0765653, 14.4178914,
+      50.0762102, 14.4179722,
+      50.0763015, 14.4181847,
+      50.0765825, 14.4181411,
     ]
 
   vertical:
@@ -34,5 +30,5 @@ safety_area:
     # the frame of reference in which the max&min z is expressed
     frame_name: "world_origin"
 
-    max_z: 30.0
+    max_z: 8.0
     min_z: 1.0
